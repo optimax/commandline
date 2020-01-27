@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using CommandLine.Core;
 using CommandLine.Text;
+using CommandLine.Text.ConsoleColor;
 using CSharpx;
 using RailwaySharp.ErrorHandling;
 
@@ -203,7 +204,14 @@ namespace CommandLine
             parserResult.WithNotParsed(
                 errors =>
                     Maybe.Merge(errors.ToMaybe(), helpWriter.ToMaybe())
-                        .Do((_, writer) => writer.Write(HelpText.AutoBuild(parserResult, maxDisplayWidth)))
+                        .Do((_, writer) =>
+                        {
+                            if (StyleBuilder.StyleType == StyleType.Color)
+                                ColorBuilder.Default.DisplayColorHelp(HelpText.AutoBuild(parserResult, maxDisplayWidth), writer);
+                            else
+                                writer.Write(HelpText.AutoBuild(parserResult, maxDisplayWidth));
+
+                        })
                 );
 
             return parserResult;

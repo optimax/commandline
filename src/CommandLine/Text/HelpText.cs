@@ -12,6 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using CommandLine.Text.ConsoleColor;
+using static CommandLine.Text.SentenceBuilder;
 
 namespace CommandLine.Text
 {
@@ -112,6 +114,7 @@ namespace CommandLine.Text
         private bool autoHelp;
         private bool autoVersion;
         private bool addNewLineBetweenHelpSections;
+        private StyleType addStyle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandLine.Text.HelpText"/> class.
@@ -200,6 +203,7 @@ namespace CommandLine.Text
             this.copyright = copyright;
             this.autoHelp = true;
             this.autoVersion = true;
+            this.addStyle = StyleType.None;
         }
 
         /// <summary>
@@ -259,6 +263,15 @@ namespace CommandLine.Text
         {
             get { return additionalNewLineAfterOption; }
             set { additionalNewLineAfterOption = value; }
+        }
+
+        /// <summary>
+        /// Add colored style
+        /// </summary>
+        public StyleType AddStyle
+        {
+            get => addStyle;
+            set => StyleBuilder.StyleType = addStyle= value;
         }
 
         /// <summary>
@@ -330,7 +343,8 @@ namespace CommandLine.Text
                 Copyright = CopyrightInfo.Empty,
                 AdditionalNewLineAfterOption = true,
                 AddDashesToOption = !verbsIndex,
-                MaximumDisplayWidth = maxDisplayWidth
+                MaximumDisplayWidth = maxDisplayWidth,
+                addStyle = StyleType.None 
             };
 
             try
@@ -361,7 +375,8 @@ namespace CommandLine.Text
 
             if (usageAttr.IsJust() || usageLines.IsJust())
             {
-                var heading = auto.SentenceBuilder.UsageHeadingText();
+                var heading = auto.SentenceBuilder.UsageHeadingText()
+                      .UsageHeadingTextStyle();
                 if (heading.Length > 0)
                 {
                     if (auto.AddNewLineBetweenHelpSections)
@@ -469,7 +484,8 @@ namespace CommandLine.Text
 
             return current
                 .AddPreOptionsLine(
-                    string.Concat(Environment.NewLine, current.SentenceBuilder.ErrorsHeadingText()))
+                    string.Concat(Environment.NewLine, current.SentenceBuilder.ErrorsHeadingText()
+                        .ErrorsHeadingTextStyle()))
                 .AddPreOptionsLines(errors);
         }
 
@@ -665,7 +681,7 @@ namespace CommandLine.Text
                 .Where(e => e.Tag != ErrorType.MutuallyExclusiveSetError))
             {
                 var line = new StringBuilder(indent.Spaces())
-                    .Append(formatError(error));
+                    .Append(formatError(error).ErrorStyle()); 
                 yield return line.ToString();
             }
 
@@ -742,7 +758,7 @@ namespace CommandLine.Text
                                 config.GroupSwitches = s.GroupSwitches;
                                 config.UseEqualToken = s.UseEqualToken;
                             }));
-                    yield return commandLine.ToString();
+                    yield return commandLine.ToString().UsageStyle(); 
                 }
             }
         }
@@ -960,10 +976,10 @@ namespace CommandLine.Text
                     specification.Tag == SpecificationType.Option,
                     it => it.Append(AddOptionName(maxLength, (OptionSpecification)specification)),
                     it => it.Append(AddValueName(maxLength, (ValueSpecification)specification)));
-
+            var optionText = name.Length < maxLength ? name.ToString().PadRight(maxLength) : name.ToString();
             optionsHelp
-                .Append(name.Length < maxLength ? name.ToString().PadRight(maxLength) : name.ToString())
-                .Append(OptionToHelpTextSeparatorWidth.Spaces());
+                  .Append(optionText.OptionStyle()) 
+                  .Append(OptionToHelpTextSeparatorWidth.Spaces());
 
             var optionHelpText = specification.HelpText;
 
@@ -971,7 +987,8 @@ namespace CommandLine.Text
                 optionHelpText += " Valid values: " + string.Join(", ", specification.EnumValues);
 
             specification.DefaultValue.Do(
-                defaultValue => optionHelpText = "(Default: {0}) ".FormatInvariant(FormatDefaultValue(defaultValue)) + optionHelpText);
+                defaultValue => optionHelpText = "(Default: {0}) "
+                                                     .FormatInvariant(FormatDefaultValue(defaultValue)) + optionHelpText);
 
             var optionGroupSpecification = GetOptionGroupSpecification();
 

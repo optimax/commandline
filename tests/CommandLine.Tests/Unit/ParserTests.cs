@@ -11,7 +11,7 @@ using CommandLine.Tests.Fakes;
 
 namespace CommandLine.Tests.Unit
 {
-    public class ParserTests
+    public class ParserTests: IClassFixture<TestsFixture>
     {
         [Fact]
         public void When_HelpWriter_is_set_help_screen_is_generated()

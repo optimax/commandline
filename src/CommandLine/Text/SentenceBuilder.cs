@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CommandLine.Text.ConsoleColor;
 
 namespace CommandLine.Text
 {
@@ -28,7 +29,7 @@ namespace CommandLine.Text
         /// Factory to allow custom SentenceBuilder injection
         /// </summary>
         public static Func<SentenceBuilder> Factory { get; set; } = () => new DefaultSentenceBuilder();
-
+        public static StyleBuilder StyleFactory { get; set; } = StyleBuilder.Create();
         /// <summary>
         /// Gets a delegate that returns the word 'required'.
         /// </summary>

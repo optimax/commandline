@@ -5,6 +5,8 @@ using System.Globalization;
 using System.IO;
 
 using CommandLine.Infrastructure;
+using CommandLine.Text;
+using CommandLine.Text.ConsoleColor;
 
 namespace CommandLine
 {
@@ -25,6 +27,8 @@ namespace CommandLine
         private CultureInfo parsingCulture;
         private bool enableDashDash;
         private int maximumDisplayWidth;
+        private StyleType styleType ; 
+        private bool enableAnsiColor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParserSettings"/> class.
@@ -36,6 +40,7 @@ namespace CommandLine
             autoHelp = true;
             autoVersion = true;
             parsingCulture = CultureInfo.InvariantCulture;
+            styleType= StyleType.None;
             try
             {
                 maximumDisplayWidth = Console.WindowWidth;
@@ -161,6 +166,22 @@ namespace CommandLine
         {
             get { return maximumDisplayWidth; }
             set { maximumDisplayWidth = value; }
+        }
+
+        public StyleType StyleType
+        {
+            get => styleType;
+            set => styleType = StyleBuilder.StyleType= value;
+        }
+
+        public bool EnableAnsiColor
+        {
+            get => enableAnsiColor;
+            set
+            {
+                ColorBuilder.Default= new AnsiColor(value);
+                enableAnsiColor = value;
+            }
         }
 
         internal StringComparer NameComparer
