@@ -114,7 +114,6 @@ namespace CommandLine.Text
         private bool autoHelp;
         private bool autoVersion;
         private bool addNewLineBetweenHelpSections;
-        private StyleType addStyle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandLine.Text.HelpText"/> class.
@@ -203,7 +202,6 @@ namespace CommandLine.Text
             this.copyright = copyright;
             this.autoHelp = true;
             this.autoVersion = true;
-            this.addStyle = StyleType.None;
         }
 
         /// <summary>
@@ -263,15 +261,6 @@ namespace CommandLine.Text
         {
             get { return additionalNewLineAfterOption; }
             set { additionalNewLineAfterOption = value; }
-        }
-
-        /// <summary>
-        /// Add colored style
-        /// </summary>
-        public StyleType AddStyle
-        {
-            get => addStyle;
-            set => StyleBuilder.StyleType = addStyle= value;
         }
 
         /// <summary>
@@ -344,7 +333,6 @@ namespace CommandLine.Text
                 AdditionalNewLineAfterOption = true,
                 AddDashesToOption = !verbsIndex,
                 MaximumDisplayWidth = maxDisplayWidth,
-                addStyle = StyleType.None 
             };
 
             try

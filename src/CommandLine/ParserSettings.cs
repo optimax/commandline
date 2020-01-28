@@ -40,7 +40,6 @@ namespace CommandLine
             autoHelp = true;
             autoVersion = true;
             parsingCulture = CultureInfo.InvariantCulture;
-            styleType= StyleType.None;
             try
             {
                 maximumDisplayWidth = Console.WindowWidth;
@@ -171,7 +170,11 @@ namespace CommandLine
         public StyleType StyleType
         {
             get => styleType;
-            set => styleType = StyleBuilder.StyleType= value;
+            set
+            {
+                styleType =  value;
+                StyleBuilder.Create(value);
+            }
         }
 
         public bool EnableAnsiColor
@@ -179,7 +182,6 @@ namespace CommandLine
             get => enableAnsiColor;
             set
             {
-                ColorBuilder.Default= new AnsiColor(value);
                 enableAnsiColor = value;
             }
         }

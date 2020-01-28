@@ -9,33 +9,29 @@ namespace CommandLine.Text.ConsoleColor
     {
         public static ColorBuilder Create() => Default;
         public static ColorBuilder Default = new AnsiColor();
-        public abstract bool Enable { get; set; }
         public abstract string ColorEncode(string text, string color);
-        public abstract void DisplayColorHelp(HelpText inputText, TextWriter writer);
+        public abstract void DisplayColorHelp(HelpText inputText, TextWriter writer,bool enable);
     }
 
     internal class AnsiColor : ColorBuilder
     {
         private const string Pattern = @"(\\u001b\[\d+;?1?m)";
         private readonly Colors colors;
-        public sealed override bool Enable { get; set; }
         public AnsiColor()
         {
             colors = new Colors();
         }
-        public AnsiColor(bool enable) : this()
-        {
-            Enable = enable;
-        }
+      
         /// <summary>
         /// Decode encoded color text and display HelpText with color on terminal
         /// </summary>
         /// <param name="inputText"></param>
         /// <param name="writer"></param>
-        internal void DisplayColorHelp(string inputText, TextWriter writer)
+        /// <param name="enable"></param>
+        internal void DisplayColorHelp(string inputText, TextWriter writer,bool enable)
         {
             //direct support Ansi color code in OS: Linux, OS x and windows 10
-            if (Enable)
+            if (enable)
             {
                 writer.Write(inputText);
                 return;
@@ -48,9 +44,10 @@ namespace CommandLine.Text.ConsoleColor
         /// </summary>
         /// <param name="inputText"></param>
         /// <param name="writer"></param>
-        public override void DisplayColorHelp(HelpText inputText, TextWriter writer)
+        /// <param name="enable"></param>
+        public override void DisplayColorHelp(HelpText inputText, TextWriter writer,bool enable)
         {
-            DisplayColorHelp(inputText.ToString(), writer);
+            DisplayColorHelp(inputText.ToString(), writer,enable);
         }
 
         /// <summary>
@@ -63,8 +60,8 @@ namespace CommandLine.Text.ConsoleColor
         {
             if (color == null) return text;
             if (text == null) return "";
-            var color1 = colors.FirstOrDefault(x => x.Name == color);
-            var ansiColor = color1?.AnsiCode;
+            var col = colors.FirstOrDefault(x => x.Name == color);
+            var ansiColor = col?.AnsiCode;
             var resetColor = colors.Reset;
             return ansiColor == null ? text : $"{ansiColor}{text}{resetColor}";
         }

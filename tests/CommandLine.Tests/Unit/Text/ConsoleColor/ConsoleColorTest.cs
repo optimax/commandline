@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿
+using System.IO;
 using CommandLine.Tests.Fakes;
 using CommandLine.Text;
 using CommandLine.Text.ConsoleColor;
@@ -7,7 +8,7 @@ using Xunit;
 
 namespace CommandLine.Tests.Unit.Text.ConsoleColor
 {
-    public class ConsoleColorTest: IClassFixture<TestsFixture>
+    public class ConsoleColorTest : IClassFixture<TestsFixture>
     {
 
         [Fact]
@@ -40,6 +41,7 @@ namespace CommandLine.Tests.Unit.Text.ConsoleColor
             lines[i++].Should().BeEquivalentTo(@"\u001b[33;1m--version         \u001b[0m    Display version information.");
             lines[i].Should().BeEquivalentTo(@"\u001b[33;1mvalue pos. 0      \u001b[0m    Define a long value here.");
         }
+
         [Theory]
         [InlineData("black", @"\u001b[30;1mHelp Screen!\u001b[0m")]
         [InlineData("red", @"\u001b[31;1mHelp Screen!\u001b[0m")]
@@ -53,7 +55,6 @@ namespace CommandLine.Tests.Unit.Text.ConsoleColor
         [InlineData(null, "Help Screen!")]
         public void Message_with_Color_encode_test(string color, string expected)
         {
-            ColorBuilder.Default.Enable = true;
             var sut = new AnsiColor();
             var msgEncoded = sut.ColorEncode("Help Screen!", color);
             // Verify outcome
@@ -65,32 +66,33 @@ namespace CommandLine.Tests.Unit.Text.ConsoleColor
         {
             // Fixture setup
             var help = @"ConsoleApp 1.0.0
-Copyright (c) 2020 Limited Global Company
+        Copyright (c) 2020 Limited Global Company
 
-  \u001b[33;1m--stringvalue     \u001b[0m    Define a string value here.
-  \u001b[33;1m-s, --shortandlong\u001b[0m    Example with both short and long name.
-  \u001b[33;1m-i                \u001b[0m    Define a int sequence here.
-  \u001b[33;1m-x                \u001b[0m    Define a boolean or switch value here.
-  \u001b[33;1m--help            \u001b[0m    Display this help screen.
-  \u001b[33;1m--version         \u001b[0m    Display version information.
-  \u001b[33;1mvalue pos. 0      \u001b[0m    Define a long value here.";
+          \u001b[33;1m--stringvalue     \u001b[0m    Define a string value here.
+          \u001b[33;1m-s, --shortandlong\u001b[0m    Example with both short and long name.
+          \u001b[33;1m-i                \u001b[0m    Define a int sequence here.
+          \u001b[33;1m-x                \u001b[0m    Define a boolean or switch value here.
+          \u001b[33;1m--help            \u001b[0m    Display this help screen.
+          \u001b[33;1m--version         \u001b[0m    Display version information.
+          \u001b[33;1mvalue pos. 0      \u001b[0m    Define a long value here.";
 
             var expected = @"ConsoleApp 1.0.0
-Copyright (c) 2020 Limited Global Company
+        Copyright (c) 2020 Limited Global Company
 
-  --stringvalue         Define a string value here.
-  -s, --shortandlong    Example with both short and long name.
-  -i                    Define a int sequence here.
-  -x                    Define a boolean or switch value here.
-  --help                Display this help screen.
-  --version             Display version information.
-  value pos. 0          Define a long value here.";
+          --stringvalue         Define a string value here.
+          -s, --shortandlong    Example with both short and long name.
+          -i                    Define a int sequence here.
+          -x                    Define a boolean or switch value here.
+          --help                Display this help screen.
+          --version             Display version information.
+          value pos. 0          Define a long value here.";
 
             // Exercise system
+        
             var sut = new AnsiColor();
             var helpWriter = new StringWriter();
-            sut.DisplayColorHelp(help, helpWriter);
-           
+            sut.DisplayColorHelp(help, helpWriter,false);
+
             // Verify outcome
             helpWriter.ToString().Should().Be(expected);
         }
@@ -101,7 +103,7 @@ Copyright (c) 2020 Limited Global Company
             var _ = new Parser(config => config.StyleType = StyleType.Color);
             var text = "ERROR(s):";
             var result = text.ErrorStyle();
-           
+
             // Verify outcome
             var expected = @"\u001b[31;1mERROR(s):\u001b[0m";
             result.Should().Be(expected);
@@ -114,7 +116,7 @@ Copyright (c) 2020 Limited Global Company
             var _ = new Parser(config => config.StyleType = StyleType.Color);
             var text = "Usage:";
             var result = text.UsageHeadingTextStyle();
-          
+
             // Verify outcome
             var expected = @"\u001b[35;1mUsage:\u001b[0m";
             result.Should().Be(expected);
@@ -124,7 +126,7 @@ Copyright (c) 2020 Limited Global Company
         public void Option_names_with_color_enabled_should_be_color_encoded()
         {
             // Fixture setup
-            var _=new Parser(config => config.StyleType = StyleType.Color);
+            var _ = new Parser(config => config.StyleType = StyleType.Color);
             var text = "-s, --shortandlong";
             // Exercise system
             var result = text.OptionStyle();
@@ -147,3 +149,4 @@ Copyright (c) 2020 Limited Global Company
         }
     }
 }
+

@@ -2,7 +2,7 @@
   "profiles": {
     "ReadText.ColorDemo": {
       "commandName": "Project",
-      "commandLineArgs": "--help head "
+      "commandLineArgs": "head  --zz"
     }
   }
 }

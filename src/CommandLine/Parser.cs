@@ -196,21 +196,23 @@ namespace CommandLine
             return DisplayHelp(
                 parserResult,
                 settings.HelpWriter,
-                settings.MaximumDisplayWidth);
+                settings.MaximumDisplayWidth,
+                settings.StyleType,
+                settings.EnableAnsiColor
+                );
         }
 
-        private static ParserResult<T> DisplayHelp<T>(ParserResult<T> parserResult, TextWriter helpWriter, int maxDisplayWidth)
+        private static ParserResult<T> DisplayHelp<T>(ParserResult<T> parserResult, TextWriter helpWriter, int maxDisplayWidth, StyleType styleType,bool enable)
         {
             parserResult.WithNotParsed(
                 errors =>
                     Maybe.Merge(errors.ToMaybe(), helpWriter.ToMaybe())
                         .Do((_, writer) =>
                         {
-                            if (StyleBuilder.StyleType == StyleType.Color)
-                                ColorBuilder.Default.DisplayColorHelp(HelpText.AutoBuild(parserResult, maxDisplayWidth), writer);
+                            if (styleType == StyleType.Color)
+                                ColorBuilder.Default.DisplayColorHelp(HelpText.AutoBuild(parserResult, maxDisplayWidth), writer,enable);
                             else
                                 writer.Write(HelpText.AutoBuild(parserResult, maxDisplayWidth));
-
                         })
                 );
 

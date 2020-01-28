@@ -1,5 +1,4 @@
 ﻿using System;
-using CommandLine.Text;
 using CommandLine.Text.ConsoleColor;
 
 namespace CommandLine.Tests
@@ -14,8 +13,9 @@ namespace CommandLine.Tests
         public void Dispose()
         {
             // Do "global" teardown here; Only called once.
-            //Reset static StyleType
-            StyleBuilder.StyleType = StyleType.None;
+            //Reset static StyleBuilder
+            StyleBuilder.Default = new DefaultStyleBuilder();
+
         }
     }
 }
