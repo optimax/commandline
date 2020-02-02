@@ -72,3 +72,12 @@ deploy:
   artifact: 'NuGetPackages'
   on:
     APPVEYOR_REPO_TAG: true
+
+
+#myget 
+- provider: NuGet
+  server: https://www.myget.org/F/commandlineparser/api/v2/package
+  api_key:
+    secure: ltHh/DsAk+Y7qbJwzUO4+i1U+7uGTLVYXTdW0+Rk2z7jqj5DDNNlih9J8K7bU4bH
+  artifact: 'NuGetPackages'    
+  symbol_server: https://www.myget.org/F/commandlineparser/symbols/api/v2/package
