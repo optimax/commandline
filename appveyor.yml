@@ -78,6 +78,6 @@ deploy:
 - provider: NuGet
   server: https://www.myget.org/F/commandlineparser/api/v2/package
   api_key:
-    secure: ltHh/DsAk+Y7qbJwzUO4+i1U+7uGTLVYXTdW0+Rk2z7jqj5DDNNlih9J8K7bU4bH
+    secure: 5/ecnXwwSwFwsrxqrS/lapGs5fDGGVXK2PyObgAvV0Xm3xQ3EcykV009E7+Ga2Il
   artifact: 'NuGetPackages'    
   symbol_server: https://www.myget.org/F/commandlineparser/symbols/api/v2/package
